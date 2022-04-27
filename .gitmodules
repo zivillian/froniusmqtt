@@ -1,0 +1,3 @@
+[submodule "lib/FroniusSolarClient"]
+	path = lib/FroniusSolarClient
+	url = https://github.com/zivillian/FroniusSolarClient.git
