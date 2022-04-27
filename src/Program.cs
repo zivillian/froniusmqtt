@@ -1,7 +1,4 @@
 ﻿using FroniusSolarClient;
-using FroniusSolarClient.Entities.SolarAPI.V1;
-using FroniusSolarClient.Entities.SolarAPI.V1.PowerFlowRealtimeData;
-using Microsoft.Extensions.DependencyInjection;
 using Mono.Options;
 using MQTTnet;
 using MQTTnet.Client;
@@ -89,7 +86,7 @@ async Task PollAsync(SolarClient client, IMqttClient mqtt, CancellationToken can
 {
     while (!cancellationToken.IsCancellationRequested)
     {
-        var p3 = client.GetP3InverterData();
+        var p3 = await client.GetP3InverterDataAsync(cancellationToken: cancellationToken);
         if (p3.Head.Status.Code != 0)
         {
             await PublishMessageAsync(mqtt, $"{mqttPrefix}/Error", p3.Head.Status.UserMessage, cancellationToken);
@@ -112,7 +109,7 @@ async Task PollAsync(SolarClient client, IMqttClient mqtt, CancellationToken can
             };
             await PublishAsync(mqtt, $"{mqttPrefix}/P3Inverter", payload, cancellationToken);
         }
-        var powerFlow = client.GetPowerFlowRealtimeData();
+        var powerFlow = await client.GetPowerFlowRealtimeDataAsync(cancellationToken);
         
         if (p3.Head.Status.Code != 0)
         {
@@ -156,7 +153,7 @@ async Task PollAsync(SolarClient client, IMqttClient mqtt, CancellationToken can
             }
             await PublishAsync(mqtt, $"{mqttPrefix}/PowerFlowRealtime", payload, cancellationToken);
         }
-        var commonInverter = client.GetCommonInverterData();
+        var commonInverter = await client.GetCommonInverterDataAsync(cancellationToken: cancellationToken);
         
         if (p3.Head.Status.Code != 0)
         {
@@ -190,7 +187,7 @@ async Task PollAsync(SolarClient client, IMqttClient mqtt, CancellationToken can
             }
             await PublishAsync(mqtt, $"{mqttPrefix}/CommonInverter", payload, cancellationToken);
         }
-        var minMaxInverter = client.GetMinMaxInverterData();
+        var minMaxInverter = await client.GetMinMaxInverterDataAsync(cancellationToken: cancellationToken);
         
         if (p3.Head.Status.Code != 0)
         {
