@@ -53,6 +53,7 @@ using (var cts = new CancellationTokenSource())
         {
             mqttClient.DisconnectAsync();
             cts.Cancel();
+            e.Cancel = true;
         };
         var mqttOptionBuilder = new MqttClientOptionsBuilder()
             .WithTcpServer(mqttHost)
